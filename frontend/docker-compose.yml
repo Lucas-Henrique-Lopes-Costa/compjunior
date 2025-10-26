@@ -4,16 +4,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=http://localhost:4000/api
     container_name: nasalinha-frontend
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:4000}
+      - NEXT_PUBLIC_API_URL=http://localhost:4000/api
     restart: unless-stopped
-    networks:
-      - nasalinha-network
-
-networks:
-  nasalinha-network:
-    driver: bridge

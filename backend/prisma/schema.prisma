@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Enum para os tipos de usuário
+enum UserRole {
+  ADMIN
+  MEMBRO
+  TRAINEE
+}
+
+// Entidade 1: User (Usuários do sistema)
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // Senha hasheada com bcrypt
+  name      String
+  role      UserRole @default(TRAINEE)
+  avatar    String?  // URL da foto de perfil (opcional)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  checkIns CheckIn[] // Um usuário pode ter vários check-ins
+
+  @@map("users")
+}
+
+// Entidade 2: Season (Temporadas/Períodos)
+model Season {
+  id              String   @id @default(uuid())
+  name            String
+  description     String?
+  startDate       DateTime
+  endDate         DateTime
+  isActive        Boolean  @default(true)
+  pointsPerCheckIn Int     @default(10)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relacionamentos
+  checkIns CheckIn[] // Uma temporada pode ter vários check-ins
+
+  @@map("seasons")
+}
+
+// Entidade 3: CheckIn (Check-ins de presença)
+model CheckIn {
+  id        String   @id @default(uuid())
+  userId    String
+  seasonId  String
+  photoUrl  String   // URL da foto do check-in (prova de presença)
+  points    Int      @default(10)
+  timestamp DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  season Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+
+  @@map("checkins")
+}
