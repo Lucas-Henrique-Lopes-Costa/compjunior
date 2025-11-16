@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   # PostgreSQL Database
   db:
@@ -30,7 +28,7 @@ services:
     container_name: nasalinha-backend
     restart: unless-stopped
     ports:
-      - "5001:5000"
+      - "5001:5001"
     env_file:
       - ./backend/.env
     depends_on:
@@ -39,8 +37,7 @@ services:
     networks:
       - nasalinha-network
     volumes:
-      - ./backend:/app
-      - /app/node_modules
+      - uploads_data:/app/uploads
 
   # Frontend React
   frontend:
@@ -57,12 +54,10 @@ services:
       - backend
     networks:
       - nasalinha-network
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
 
 volumes:
   postgres_data:
+  uploads_data:
 
 networks:
   nasalinha-network:
