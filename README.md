@@ -89,6 +89,21 @@ cp backend/.env.example backend/.env
 
 3. **Execute com Docker Compose**
 
+#### Backend
+
+```bash
+cd backend
+npm install
+npm run prisma:migrate
+```
+
+#### Frontend
+
+```bash
+cd frontend
+npm install
+```
+
 ```bash
 docker-compose up --build
 ```
