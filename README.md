@@ -1,19 +1,11 @@
-# 🎯 NaSalinha - Sistema de Check-in Gamificado
+# NaSalinha - Sistema de Check-in Gamificado
 
-<div align="center">
+![Node.js](https://img.shields.io/badge/Node.js-18+-green)
+![React](https://img.shields.io/badge/React-18+-blue)
+![Docker](https://img.shields.io/badge/Docker-Ready-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
-![License](https://img.shields.io/badge/license-MIT-blue)
-![Node](https://img.shields.io/badge/node-20.x-green)
-![TypeScript](https://img.shields.io/badge/typescript-5.x-blue)
-
-**Sistema de gamificação para incentivar a presença dos membros da Comp Júnior na sala**
-
-</div>
-
----
-
-## Sobre
+## Sobre o Projeto
 
 O **NaSalinha** é um sistema de check-in gamificado desenvolvido para a **Comp Júnior** que incentiva a presença dos membros através de um sistema de pontos e rankings sazonais.
 
@@ -34,53 +26,88 @@ Sistema **simplificado** que utiliza apenas **prova fotográfica** para validar 
 - Flexibilidade de localização
 - Experiência mais simples e direta
 
----
+## Arquitetura do Projeto
 
-## Tecnologias
+```
+compjunior/
+├── backend/          # API REST com Node.js, Express e PostgreSQL
+│   ├── src/
+│   ├── tests/
+│   └── Dockerfile
+├── frontend/         # Interface React com design responsivo
+│   ├── src/
+│   └── Dockerfile
+└── docker-compose.yml
+```
+
+## Tecnologias Utilizadas
 
 ### Backend
 
-- **[NestJS](https://nestjs.com/)** - Framework Node.js progressivo
-- **[Prisma](https://www.prisma.io/)** - ORM TypeScript-first
-- **[PostgreSQL](https://www.postgresql.org/)** - Banco de dados (Supabase)
-- **[Passport JWT](https://www.passportjs.org/)** - Autenticação
-- **[TypeScript](https://www.typescriptlang.org/)** - Superset JavaScript
+- **Node.js** com **Express** - Framework web rápido e minimalista
+- **PostgreSQL** - Banco de dados relacional robusto
+- **Prisma ORM** - ORM moderno com type-safety
+- **JWT** - Autenticação segura com tokens
+- **Cloudinary** - Armazenamento de imagens na nuvem
+- **Nodemailer** - Sistema de envio de e-mails
+- **Jest & Supertest** - Testes automatizados
+- **Docker** - Containerização da aplicação
 
 ### Frontend
 
-- **[Next.js 15](https://nextjs.org/)** - Framework React
-- **[React 19](https://react.dev/)** - Biblioteca UI
-- **[Tailwind CSS](https://tailwindcss.com/)** - Framework CSS
-- **[Zod](https://zod.dev/)** - Validação de schemas
-- **[TypeScript](https://www.typescriptlang.org/)** - Type safety
+- **React 18** - Biblioteca para interfaces modernas
+- **React Router** - Navegação entre páginas
+- **Axios** - Cliente HTTP para consumir a API
+- **TailwindCSS** - Framework CSS utilitário
+- **React Icons** - Ícones modernos
+- **Docker** - Containerização da aplicação
 
-### DevOps
+## Pré-requisitos
 
-- **[Docker](https://www.docker.com/)** - Containerização
-- **[Docker Compose](https://docs.docker.com/compose/)** - Orquestração
-- **[Supabase](https://supabase.com/)** - Backend as a Service
+- Docker e Docker Compose instalados
+- Node.js 18+ (para desenvolvimento local)
+- Git
 
----
+## Como Executar o Projeto
 
-## 🏁 Começando
+### Usando Docker (Recomendado)
 
-### Pré-requisitos
+1. **Clone o repositório**
 
-- **Node.js** 20.x ou superior
-- **npm** ou **yarn**
-- **Docker** e **Docker Compose** (opcional)
-- Conta no **Supabase** (para banco de dados)
+```bash
+git clone https://github.com/Lucas-Henrique-Lopes-Costa/compjunior.git
+cd compjunior
+```
+
+2. **Configure as variáveis de ambiente**
+
+```bash
+# Backend
+cp backend/.env.example backend/.env
+# Edite o arquivo backend/.env com suas credenciais
+```
+
+3. **Execute com Docker Compose**
+
+```bash
+docker-compose up --build
+```
+
+4. **Acesse a aplicação**
+
+- Frontend: <http://localhost:3000>
+- Backend: <http://localhost:5000>
+- API Docs: <http://localhost:5000/api-docs>
+
+### Desenvolvimento Local
 
 #### Backend
 
 ```bash
 cd backend
 npm install
-cp .env.example .env
-# Configure o .env com credenciais Supabase
-npx prisma generate
-npx prisma db push
-npm run start:dev
+npm run prisma:migrate
+npm run dev
 ```
 
 #### Frontend
@@ -88,47 +115,130 @@ npm run start:dev
 ```bash
 cd frontend
 npm install
-cp .env.local.example .env.local
-# Configure NEXT_PUBLIC_API_URL
-npm run dev
+npm start
 ```
 
----
+## Documentação da API
 
-## 📁 Estrutura do Projeto
+A documentação completa da API está disponível em `/backend/API_DOCS.md` e também através do Swagger UI em `http://localhost:5000/api-docs` quando o servidor está rodando.
 
-```
-compjunior/
-├── backend/              # API NestJS
-│   ├── src/
-│   │   ├── auth/        # Autenticação JWT
-│   │   ├── users/       # Gestão de usuários
-│   │   ├── seasons/     # Temporadas
-│   │   ├── checkins/    # Sistema de check-ins
-│   │   └── prisma/      # Cliente Prisma
-│   ├── prisma/
-│   │   └── schema.prisma
-│   ├── Dockerfile
-│   └── package.json
-│
-├── frontend/            # App Next.js
-│   ├── src/
-│   │   ├── app/        # App Router (Pages)
-│   │   ├── components/ # Componentes React
-│   │   ├── services/   # API Client
-│   │   ├── hooks/      # Custom Hooks
-│   │   └── types/      # TypeScript Types
-│   ├── Dockerfile
-│   └── package.json
-│
-├── docker-compose.yml   # Orquestração
-├── Makefile            # Comandos simplificados
-└── README.md           # Este arquivo
+### Principais Endpoints
+
+- **Auth**: `/api/auth/register`, `/api/auth/login`
+- **Users**: `/api/users` (CRUD completo)
+- **Check-ins**: `/api/checkins` (CRUD completo)
+- **Rankings**: `/api/rankings`
+- **Seasons**: `/api/seasons` (CRUD completo - Admin only)
+
+## Testes
+
+### Backend
+
+```bash
+cd backend
+npm test                  # Todos os testes
+npm run test:watch        # Modo watch
+npm run test:coverage     # Relatório de cobertura
 ```
 
----
+### Frontend
 
-## 📄 Licença
+```bash
+cd frontend
+npm test
+npm run test:coverage
+```
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+## Níveis de Usuário
 
+- **Admin** - Acesso total ao sistema, gerenciamento de temporadas
+- **Membro** - Check-ins, visualização de ranking
+- **Trainee** - Check-ins básicos, visualização limitada
+
+## Design e Responsividade
+
+A interface foi desenvolvida seguindo princípios de:
+
+- Mobile First
+- Design responsivo para todas as telas
+- Acessibilidade (WCAG 2.1)
+- UX intuitiva e agradável
+
+## Estrutura do Banco de Dados
+
+### Entidades Principais
+
+1. **Users** - Dados dos usuários (nome, email, senha hash, role)
+2. **CheckIns** - Registros de check-in com foto
+3. **Seasons** - Temporadas de competição
+4. **Points** - Pontuação dos usuários
+
+### Relacionamentos
+
+- User → CheckIns (1:N)
+- Season → CheckIns (1:N)
+- User → Points → Season (N:N através de Points)
+
+## Segurança
+
+- Senhas criptografadas com bcrypt
+- Autenticação JWT com refresh tokens
+- Rate limiting para prevenir abuso
+- Validação de dados com Joi
+- Headers de segurança com Helmet
+- CORS configurado adequadamente
+
+## Sistema de E-mails
+
+- Confirmação de cadastro
+- Recuperação de senha
+- Notificações de ranking
+
+## Funcionalidades "Ir Além" Implementadas
+
+- Testes automatizados (Jest, Supertest)
+- Integração com API externa (Cloudinary)
+- Sistema de envio de e-mails (Nodemailer)
+- Versionamento correto de código no Git
+- Commits descritivos e bem organizados
+- Componentização máxima no frontend
+- Linters (ESLint) e Formatters (Prettier)
+
+## Cronograma de Desenvolvimento
+
+### Semanas 1-2: Fundação
+
+- Setup do projeto (backend + frontend)
+- Banco de dados PostgreSQL com Prisma
+- Docker e Docker Compose
+- Estrutura de pastas
+
+### Semana 3: Autenticação
+
+- Sistema de registro e login
+- JWT tokens
+- Middleware de autenticação
+- Recuperação de senha
+
+### Semanas 4-5: CRUD e Features
+
+- CRUD completo de usuários
+- CRUD completo de check-ins
+- CRUD completo de temporadas
+- Sistema de pontos
+- Rankings
+
+### Semana 6: Finalização
+
+- Testes automatizados
+- Documentação completa
+- Refinamentos de UX
+- Deploy com Docker
+
+## Licença
+
+Este projeto está sob a licença MIT.
+
+## Autor
+
+Desenvolvido para a Comp Júnior

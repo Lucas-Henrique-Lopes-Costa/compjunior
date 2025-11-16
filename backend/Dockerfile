@@ -1,50 +1,24 @@
-# Etapa 1: Build
-FROM node:20-alpine AS builder
+FROM node:18-alpine
 
+# Install OpenSSL and build dependencies for native modules
+RUN apk add --no-cache openssl python3 make g++
+
+# Create app directory
 WORKDIR /app
 
-# Copiar arquivos de dependências
+# Install dependencies
 COPY package*.json ./
-COPY prisma ./prisma/
+RUN npm ci --only=production && npm rebuild bcrypt --build-from-source
 
-# Instalar dependências
-RUN npm ci
-
-# Gerar Prisma Client
+# Copy Prisma schema and generate client
+COPY prisma ./prisma
 RUN npx prisma generate
 
-# Copiar código fonte
+# Copy app source
 COPY . .
 
-# Build da aplicação
-RUN npm run build
+# Expose port
+EXPOSE 5000
 
-# Etapa 2: Runtime
-FROM node:20-alpine AS runner
-
-WORKDIR /app
-
-# Configurar ambiente de produção
-ENV NODE_ENV=production
-
-# Criar usuário não-root
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nestjs
-
-# Copiar arquivos necessários do builder
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/package*.json ./
-
-# Gerar Prisma Client novamente para produção
-RUN npx prisma generate
-
-# Usar usuário não-root
-USER nestjs
-
-# Expor porta
-EXPOSE 4000
-
-# Iniciar aplicação
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main"]
+# Run migrations and start server
+CMD ["sh", "-c", "npx prisma migrate deploy && npm start"]
