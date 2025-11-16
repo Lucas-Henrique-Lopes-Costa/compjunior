@@ -1,0 +1,76 @@
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    container_name: nasalinha-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: nasalinha
+      POSTGRES_PASSWORD: nasalinha123
+      POSTGRES_DB: nasalinha_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - nasalinha-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nasalinha -d nasalinha_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API (Desenvolvimento)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: nasalinha-backend-dev
+    restart: unless-stopped
+    command: sh -c "npm install && npx prisma generate && npm run dev"
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - nasalinha-network
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - uploads_data:/app/uploads
+    environment:
+      - NODE_ENV=development
+
+  # Frontend React (Desenvolvimento)
+  frontend:
+    image: node:18-alpine
+    container_name: nasalinha-frontend-dev
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "npm install && npm start"
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5001/api
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    depends_on:
+      - backend
+    networks:
+      - nasalinha-network
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+
+volumes:
+  postgres_data:
+  uploads_data:
+
+networks:
+  nasalinha-network:
+    driver: bridge
