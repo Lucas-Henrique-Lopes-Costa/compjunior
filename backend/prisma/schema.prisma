@@ -6,67 +6,100 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-// Enum para os tipos de usuário
-enum UserRole {
+// Enum para os níveis de acesso
+enum Role {
   ADMIN
-  MEMBRO
+  MEMBER
   TRAINEE
 }
 
-// Entidade 1: User (Usuários do sistema)
+// Enum para o status do check-in
+enum CheckInStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// Modelo de Usuário
 model User {
   id        String   @id @default(uuid())
-  email     String   @unique
-  password  String   // Senha hasheada com bcrypt
   name      String
-  role      UserRole @default(TRAINEE)
-  avatar    String?  // URL da foto de perfil (opcional)
+  email     String   @unique
+  password  String
+  role      Role     @default(MEMBER)
+  avatar    String?
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relacionamentos
-  checkIns CheckIn[] // Um usuário pode ter vários check-ins
+  checkIns CheckIn[]
+  points   Point[]
 
   @@map("users")
 }
 
-// Entidade 2: Season (Temporadas/Períodos)
+// Modelo de Temporada
 model Season {
   id              String   @id @default(uuid())
   name            String
   description     String?
   startDate       DateTime
   endDate         DateTime
-  isActive        Boolean  @default(true)
+  isActive        Boolean  @default(false)
   pointsPerCheckIn Int     @default(10)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
   // Relacionamentos
-  checkIns CheckIn[] // Uma temporada pode ter vários check-ins
+  checkIns CheckIn[]
+  points   Point[]
 
   @@map("seasons")
 }
 
-// Entidade 3: CheckIn (Check-ins de presença)
+// Modelo de Check-in
 model CheckIn {
-  id        String   @id @default(uuid())
-  userId    String
-  seasonId  String
-  photoUrl  String   // URL da foto do check-in (prova de presença)
-  points    Int      @default(10)
-  timestamp DateTime @default(now())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String        @id @default(uuid())
+  photoUrl  String
+  points    Int           @default(0)
+  status    CheckInStatus @default(PENDING)
+  notes     String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 
   // Relacionamentos
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  season Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  seasonId String
+  season   Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
+  @@index([seasonId])
+  @@index([status])
   @@map("checkins")
+}
+
+// Modelo de Pontuação (agregada por temporada)
+model Point {
+  id          String   @id @default(uuid())
+  totalPoints Int      @default(0)
+  checkInsCount Int    @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relacionamentos
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  seasonId String
+  season   Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, seasonId])
+  @@index([seasonId])
+  @@index([totalPoints])
+  @@map("points")
 }

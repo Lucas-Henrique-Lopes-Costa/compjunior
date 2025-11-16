@@ -37,5 +37,14 @@
   "prettier.trailingComma": "all",
   "prettier.semi": true,
   "prettier.printWidth": 100,
-  "files.eol": "\n"
+  "files.eol": "\n",
+  "cSpell.words": [
+    "checkins",
+    "compjunior",
+    "Componentização",
+    "Containerização",
+    "gamificado",
+    "Gamificado",
+    "nginx"
+  ]
 }
