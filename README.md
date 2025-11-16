@@ -111,8 +111,8 @@ docker-compose up --build
 4. **Acesse a aplicação**
 
 - Frontend: <http://localhost:3000>
-- Backend: <http://localhost:5000>
-- API Docs: <http://localhost:5000/api-docs>
+- Backend: <http://localhost:5001>
+- API Docs: <http://localhost:5001/api-docs>
 
 ### Desenvolvimento Local
 
@@ -135,7 +135,7 @@ npm start
 
 ## Documentação da API
 
-A documentação completa da API está disponível em `/backend/API_DOCS.md` e também através do Swagger UI em `http://localhost:5000/api-docs` quando o servidor está rodando.
+A documentação completa da API está disponível em `/backend/API_DOCS.md` e também através do Swagger UI em `http://localhost:5001/api-docs` quando o servidor está rodando.
 
 ### Principais Endpoints
 
