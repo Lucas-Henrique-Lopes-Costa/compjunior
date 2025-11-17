@@ -26,20 +26,6 @@ Sistema **simplificado** que utiliza apenas **prova fotográfica** para validar 
 - Flexibilidade de localização
 - Experiência mais simples e direta
 
-## Arquitetura do Projeto
-
-```
-compjunior/
-├── backend/          # API REST com Node.js, Express e PostgreSQL
-│   ├── src/
-│   ├── tests/
-│   └── Dockerfile
-├── frontend/         # Interface React com design responsivo
-│   ├── src/
-│   └── Dockerfile
-└── docker-compose.yml
-```
-
 ## Tecnologias Utilizadas
 
 ### Backend
@@ -114,25 +100,6 @@ docker-compose up --build
 - Backend: <http://localhost:5001>
 - API Docs: <http://localhost:5001/api-docs>
 
-### Desenvolvimento Local
-
-#### Backend
-
-```bash
-cd backend
-npm install
-npm run prisma:migrate
-npm run dev
-```
-
-#### Frontend
-
-```bash
-cd frontend
-npm install
-npm start
-```
-
 ## Documentação da API
 
 A documentação completa da API está disponível em `/backend/API_DOCS.md` e também através do Swagger UI em `http://localhost:5001/api-docs` quando o servidor está rodando.
@@ -156,19 +123,11 @@ npm run test:watch        # Modo watch
 npm run test:coverage     # Relatório de cobertura
 ```
 
-### Frontend
-
-```bash
-cd frontend
-npm test
-npm run test:coverage
-```
-
 ## Níveis de Usuário
 
 - **Admin** - Acesso total ao sistema, gerenciamento de temporadas
 - **Membro** - Check-ins, visualização de ranking
-- **Trainee** - Check-ins básicos, visualização limitada
+- **Trainee** - Check-ins e pontuação
 
 ## Design e Responsividade
 
@@ -207,7 +166,6 @@ A interface foi desenvolvida seguindo princípios de:
 
 - Confirmação de cadastro
 - Recuperação de senha
-- Notificações de ranking
 
 ## Funcionalidades "Ir Além" Implementadas
 
@@ -256,4 +214,4 @@ Este projeto está sob a licença MIT.
 
 ## Autor
 
-Desenvolvido para a Comp Júnior
+Desenvolvido para a Comp Júnior 💙

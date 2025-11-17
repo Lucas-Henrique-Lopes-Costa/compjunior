@@ -81,35 +81,6 @@ class EmailService {
             throw error;
         }
     }
-
-    async sendCheckInNotification(user, checkIn) {
-        try {
-            await this.transporter.sendMail({
-                from: process.env.EMAIL_FROM || '"NaSalinha" <noreply@nasalinha.com>',
-                to: user.email,
-                subject: 'Check-in Realizado com Sucesso! ✅',
-                html: `
-                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                        <h1 style="color: #6366f1;">Check-in Confirmado!</h1>
-                        <p>Olá <strong>${user.name}</strong>,</p>
-                        <p>Seu check-in foi registrado com sucesso!</p>
-                        <p><strong>Detalhes:</strong></p>
-                        <ul>
-                            <li>Data: ${new Date(checkIn.createdAt).toLocaleDateString('pt-BR')}</li>
-                            <li>Hora: ${new Date(checkIn.createdAt).toLocaleTimeString('pt-BR')}</li>
-                            <li>Status: ${checkIn.status}</li>
-                        </ul>
-                        <p>Continue fazendo check-ins para acumular mais pontos! 🎯</p>
-                        <p>Acesse seu <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/dashboard" style="color: #6366f1;">dashboard</a> para ver seu ranking.</p>
-                    </div>
-                `,
-            });
-            console.log(`✅ E-mail de check-in enviado para ${user.email}`);
-        } catch (error) {
-            console.error('❌ Erro ao enviar e-mail de check-in:', error);
-            // Não lança erro para não bloquear o check-in
-        }
-    }
 }
 
 module.exports = new EmailService();
