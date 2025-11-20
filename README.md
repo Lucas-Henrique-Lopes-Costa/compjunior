@@ -80,7 +80,6 @@ cp backend/.env.example backend/.env
 ```bash
 cd backend
 npm install
-npm run prisma:migrate
 ```
 
 #### Frontend
