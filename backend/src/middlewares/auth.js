@@ -6,57 +6,57 @@ const prisma = require('../config/database');
  * Verifica se o usuário está autenticado através do JWT
  */
 const authenticate = async (req, res, next) => {
-    try {
-        // Extrai o token do header Authorization
-        const authHeader = req.headers.authorization;
+  try {
+    // Extrai o token do header Authorization
+    const authHeader = req.headers.authorization;
 
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return res.status(401).json({
-                success: false,
-                message: 'Token não fornecido',
-            });
-        }
-
-        const token = authHeader.substring(7); // Remove "Bearer "
-
-        // Verifica e decodifica o token
-        const decoded = verifyAccessToken(token);
-
-        // Busca o usuário no banco de dados
-        const user = await prisma.user.findUnique({
-            where: { id: decoded.userId },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                role: true,
-                isActive: true,
-            },
-        });
-
-        if (!user) {
-            return res.status(401).json({
-                success: false,
-                message: 'Usuário não encontrado',
-            });
-        }
-
-        if (!user.isActive) {
-            return res.status(401).json({
-                success: false,
-                message: 'Usuário inativo',
-            });
-        }
-
-        // Adiciona o usuário ao request
-        req.user = user;
-        next();
-    } catch (error) {
-        return res.status(401).json({
-            success: false,
-            message: error.message || 'Token inválido',
-        });
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({
+        success: false,
+        message: 'Token não fornecido',
+      });
     }
+
+    const token = authHeader.substring(7); // Remove "Bearer "
+
+    // Verifica e decodifica o token
+    const decoded = verifyAccessToken(token);
+
+    // Busca o usuário no banco de dados
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        isActive: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Usuário não encontrado',
+      });
+    }
+
+    if (!user.isActive) {
+      return res.status(401).json({
+        success: false,
+        message: 'Usuário inativo',
+      });
+    }
+
+    // Adiciona o usuário ao request
+    req.user = user;
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: error.message || 'Token inválido',
+    });
+  }
 };
 
 /**
@@ -64,26 +64,26 @@ const authenticate = async (req, res, next) => {
  * @param {string[]} allowedRoles - Roles permitidas
  */
 const authorize = (...allowedRoles) => {
-    return (req, res, next) => {
-        if (!req.user) {
-            return res.status(401).json({
-                success: false,
-                message: 'Não autenticado',
-            });
-        }
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Não autenticado',
+      });
+    }
 
-        if (!allowedRoles.includes(req.user.role)) {
-            return res.status(403).json({
-                success: false,
-                message: 'Sem permissão para acessar este recurso',
-            });
-        }
+    if (!allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({
+        success: false,
+        message: 'Sem permissão para acessar este recurso',
+      });
+    }
 
-        next();
-    };
+    next();
+  };
 };
 
 module.exports = {
-    authenticate,
-    authorize,
+  authenticate,
+  authorize,
 };

@@ -1,11 +1,6 @@
 const express = require('express');
-const seasonController = require('../controllers/season.controller');
+const pointController = require('../controllers/point.controller');
 const { authenticate, authorize } = require('../middlewares/auth');
-const validate = require('../middlewares/validate');
-const {
-  createSeasonSchema,
-  updateSeasonSchema,
-} = require('../validators/season.validator');
 
 const router = express.Router();
 
@@ -14,10 +9,10 @@ router.use(authenticate);
 
 /**
  * @swagger
- * /api/seasons:
+ * /api/points:
  *   post:
- *     summary: Criar nova temporada (CREATE - Admin only)
- *     tags: [Temporadas]
+ *     summary: Criar novo registro de pontos (CREATE - Admin only)
+ *     tags: [Pontos]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -27,30 +22,26 @@ router.use(authenticate);
  *           schema:
  *             type: object
  *             required:
- *               - name
- *               - startDate
- *               - endDate
+ *               - userId
+ *               - seasonId
  *             properties:
- *               name:
+ *               userId:
  *                 type: string
- *                 example: Temporada Verão 2024
- *               description:
+ *                 format: uuid
+ *                 example: 123e4567-e89b-12d3-a456-426614174000
+ *               seasonId:
  *                 type: string
- *                 example: Temporada de check-ins do verão
- *               startDate:
- *                 type: string
- *                 format: date-time
- *                 example: 2024-12-01T00:00:00Z
- *               endDate:
- *                 type: string
- *                 format: date-time
- *                 example: 2025-03-01T00:00:00Z
- *               pointsPerCheckIn:
+ *                 format: uuid
+ *                 example: 123e4567-e89b-12d3-a456-426614174001
+ *               totalPoints:
  *                 type: integer
- *                 example: 10
+ *                 example: 50
+ *               checkInsCount:
+ *                 type: integer
+ *                 example: 5
  *     responses:
  *       201:
- *         description: Temporada criada com sucesso
+ *         description: Registro de pontos criado com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -61,11 +52,11 @@ router.use(authenticate);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Temporada criada com sucesso
+ *                   example: Registro de pontos criado com sucesso
  *                 data:
- *                   $ref: '#/components/schemas/Season'
+ *                   $ref: '#/components/schemas/Point'
  *       400:
- *         description: Dados inválidos
+ *         description: Registro já existe
  *         content:
  *           application/json:
  *             schema:
@@ -83,24 +74,19 @@ router.use(authenticate);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post(
-  '/',
-  authorize('ADMIN'),
-  validate(createSeasonSchema),
-  seasonController.create
-);
+router.post('/', authorize('ADMIN'), pointController.create);
 
 /**
  * @swagger
- * /api/seasons:
+ * /api/points:
  *   get:
- *     summary: Listar todas as temporadas (READ)
- *     tags: [Temporadas]
+ *     summary: Listar todos os registros de pontos (READ)
+ *     tags: [Pontos]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Lista de temporadas retornada com sucesso
+ *         description: Lista de registros de pontos retornada com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -112,7 +98,7 @@ router.post(
  *                 data:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Season'
+ *                     $ref: '#/components/schemas/Point'
  *       401:
  *         description: Não autenticado
  *         content:
@@ -120,50 +106,14 @@ router.post(
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.get('/', seasonController.getAll);
+router.get('/', pointController.getAll);
 
 /**
  * @swagger
- * /api/seasons/active:
+ * /api/points/{id}:
  *   get:
- *     summary: Obter temporada ativa (READ)
- *     tags: [Temporadas]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Temporada ativa retornada com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 data:
- *                   $ref: '#/components/schemas/Season'
- *       404:
- *         description: Nenhuma temporada ativa encontrada
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- *       401:
- *         description: Não autenticado
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- */
-router.get('/active', seasonController.getActive);
-
-/**
- * @swagger
- * /api/seasons/{id}:
- *   get:
- *     summary: Obter temporada por ID (READ)
- *     tags: [Temporadas]
+ *     summary: Obter registro de pontos por ID (READ)
+ *     tags: [Pontos]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -173,10 +123,10 @@ router.get('/active', seasonController.getActive);
  *         schema:
  *           type: string
  *           format: uuid
- *         description: ID da temporada
+ *         description: ID do registro de pontos
  *     responses:
  *       200:
- *         description: Temporada encontrada
+ *         description: Registro de pontos encontrado
  *         content:
  *           application/json:
  *             schema:
@@ -186,9 +136,9 @@ router.get('/active', seasonController.getActive);
  *                   type: boolean
  *                   example: true
  *                 data:
- *                   $ref: '#/components/schemas/Season'
+ *                   $ref: '#/components/schemas/Point'
  *       404:
- *         description: Temporada não encontrada
+ *         description: Registro de pontos não encontrado
  *         content:
  *           application/json:
  *             schema:
@@ -200,14 +150,68 @@ router.get('/active', seasonController.getActive);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.get('/:id', seasonController.getById);
+router.get('/:id', pointController.getById);
 
 /**
  * @swagger
- * /api/seasons/{id}:
+ * /api/points/user/{userId}/season/{seasonId}:
+ *   get:
+ *     summary: Obter registro de pontos por usuário e temporada (READ)
+ *     tags: [Pontos]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: ID do usuário
+ *       - in: path
+ *         name: seasonId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: ID da temporada
+ *     responses:
+ *       200:
+ *         description: Registro de pontos encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/Point'
+ *       404:
+ *         description: Registro de pontos não encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Não autenticado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+router.get(
+  '/user/:userId/season/:seasonId',
+  pointController.getByUserAndSeason
+);
+
+/**
+ * @swagger
+ * /api/points/{id}:
  *   put:
- *     summary: Atualizar temporada (UPDATE - Admin only)
- *     tags: [Temporadas]
+ *     summary: Atualizar registro de pontos (UPDATE - Admin only)
+ *     tags: [Pontos]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -217,7 +221,7 @@ router.get('/:id', seasonController.getById);
  *         schema:
  *           type: string
  *           format: uuid
- *         description: ID da temporada
+ *         description: ID do registro de pontos
  *     requestBody:
  *       required: true
  *       content:
@@ -225,26 +229,15 @@ router.get('/:id', seasonController.getById);
  *           schema:
  *             type: object
  *             properties:
- *               name:
- *                 type: string
- *                 example: Temporada Verão 2024 Atualizada
- *               description:
- *                 type: string
- *                 example: Descrição atualizada
- *               startDate:
- *                 type: string
- *                 format: date-time
- *                 example: 2024-12-01T00:00:00Z
- *               endDate:
- *                 type: string
- *                 format: date-time
- *                 example: 2025-03-01T00:00:00Z
- *               pointsPerCheckIn:
+ *               totalPoints:
  *                 type: integer
- *                 example: 15
+ *                 example: 100
+ *               checkInsCount:
+ *                 type: integer
+ *                 example: 10
  *     responses:
  *       200:
- *         description: Temporada atualizada com sucesso
+ *         description: Registro de pontos atualizado com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -255,11 +248,11 @@ router.get('/:id', seasonController.getById);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Temporada atualizada com sucesso
+ *                   example: Registro de pontos atualizado com sucesso
  *                 data:
- *                   $ref: '#/components/schemas/Season'
+ *                   $ref: '#/components/schemas/Point'
  *       404:
- *         description: Temporada não encontrada
+ *         description: Registro de pontos não encontrado
  *         content:
  *           application/json:
  *             schema:
@@ -277,76 +270,14 @@ router.get('/:id', seasonController.getById);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.put(
-  '/:id',
-  authorize('ADMIN'),
-  validate(updateSeasonSchema),
-  seasonController.update
-);
+router.put('/:id', authorize('ADMIN'), pointController.update);
 
 /**
  * @swagger
- * /api/seasons/{id}/toggle-active:
- *   patch:
- *     summary: Ativar/Desativar temporada (Admin only)
- *     tags: [Temporadas]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *         description: ID da temporada
- *     responses:
- *       200:
- *         description: Status da temporada alterado com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: Temporada ativada com sucesso
- *                 data:
- *                   $ref: '#/components/schemas/Season'
- *       404:
- *         description: Temporada não encontrada
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- *       401:
- *         description: Não autenticado
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- *       403:
- *         description: Não autorizado (requer role ADMIN)
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- */
-router.patch(
-  '/:id/toggle-active',
-  authorize('ADMIN'),
-  seasonController.toggleActive
-);
-
-/**
- * @swagger
- * /api/seasons/{id}:
+ * /api/points/{id}:
  *   delete:
- *     summary: Deletar temporada (DELETE - Admin only)
- *     tags: [Temporadas]
+ *     summary: Deletar registro de pontos (DELETE - Admin only)
+ *     tags: [Pontos]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -356,10 +287,10 @@ router.patch(
  *         schema:
  *           type: string
  *           format: uuid
- *         description: ID da temporada
+ *         description: ID do registro de pontos
  *     responses:
  *       200:
- *         description: Temporada deletada com sucesso
+ *         description: Registro de pontos deletado com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -370,9 +301,9 @@ router.patch(
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Temporada deletada com sucesso
+ *                   example: Registro de pontos deletado com sucesso
  *       404:
- *         description: Temporada não encontrada
+ *         description: Registro de pontos não encontrado
  *         content:
  *           application/json:
  *             schema:
@@ -390,6 +321,6 @@ router.patch(
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.delete('/:id', authorize('ADMIN'), seasonController.delete);
+router.delete('/:id', authorize('ADMIN'), pointController.delete);
 
 module.exports = router;
