@@ -18,14 +18,6 @@ O **NaSalinha** é um sistema de check-in gamificado desenvolvido para a **Comp 
 - **Temporadas** - Períodos definidos de competição
 - **Autenticação JWT** - Sistema seguro de login
 
-### Diferencial
-
-Sistema **simplificado** que utiliza apenas **prova fotográfica** para validar check-ins, sem necessidade de geolocalização GPS, oferecendo:
-
-- Maior privacidade aos membros
-- Flexibilidade de localização
-- Experiência mais simples e direta
-
 ## Tecnologias Utilizadas
 
 ### Backend
@@ -56,7 +48,7 @@ Sistema **simplificado** que utiliza apenas **prova fotográfica** para validar 
 
 ## Como Executar o Projeto
 
-### Usando Docker (Recomendado)
+### Usando Docker
 
 1. **Clone o repositório**
 
@@ -93,14 +85,7 @@ npm install
 docker-compose up --build
 ```
 
-4. **Acesse a aplicação**
-
-- Frontend: <http://localhost:3000>
-- Backend: <http://localhost:5001>
-- API Docs: <http://localhost:5001/api-docs>
-- Prisma Studio: <http://localhost:5555>
-
-### Prisma Studio (Gerenciar Banco de Dados)
+### #Prisma Studio (Gerenciar Banco de Dados)
 
 Para abrir o Prisma Studio e gerenciar o banco de dados visualmente:
 
@@ -108,7 +93,12 @@ Para abrir o Prisma Studio e gerenciar o banco de dados visualmente:
 docker exec -d nasalinha-backend npx prisma studio --browser none --port 5555
 ```
 
-Depois acesse: <http://localhost:5555>
+4. **Acesse a aplicação**
+
+- Frontend: <http://localhost:3000>
+- Backend: <http://localhost:5001>
+- API Docs: <http://localhost:5001/api-docs>
+- Prisma Studio: <http://localhost:5555>
 
 ## Documentação da API
 
@@ -185,7 +175,6 @@ A interface foi desenvolvida seguindo princípios de:
 - Versionamento correto de código no Git
 - Commits descritivos e bem organizados
 - Componentização máxima no frontend
-- Linters (ESLint) e Formatters (Prettier)
 
 ## Cronograma de Desenvolvimento
 
@@ -221,7 +210,3 @@ A interface foi desenvolvida seguindo princípios de:
 ## Licença
 
 Este projeto está sob a licença MIT.
-
-## Autor
-
-Desenvolvido para a Comp Júnior 💙
