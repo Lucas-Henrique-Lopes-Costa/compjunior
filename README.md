@@ -98,6 +98,17 @@ docker-compose up --build
 - Frontend: <http://localhost:3000>
 - Backend: <http://localhost:5001>
 - API Docs: <http://localhost:5001/api-docs>
+- Prisma Studio: <http://localhost:5555>
+
+### Prisma Studio (Gerenciar Banco de Dados)
+
+Para abrir o Prisma Studio e gerenciar o banco de dados visualmente:
+
+```bash
+docker exec -d nasalinha-backend npx prisma studio --browser none --port 5555
+```
+
+Depois acesse: <http://localhost:5555>
 
 ## Documentação da API
 
