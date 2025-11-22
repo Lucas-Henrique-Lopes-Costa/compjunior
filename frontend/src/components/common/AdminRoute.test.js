@@ -1,12 +1,12 @@
-jest.mock('../../contexts/AuthContext', () => ({
-  useAuth: jest.fn(),
-}));
-
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import AdminRoute from './AdminRoute';
 import { useAuth } from '../../contexts/AuthContext';
+
+jest.mock('../../contexts/AuthContext', () => ({
+  useAuth: jest.fn(),
+}));
 
 const TestComponent = () => <div>Admin Content</div>;
 

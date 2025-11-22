@@ -68,11 +68,12 @@ describe('Input Component', () => {
     expect(input).toHaveClass('disabled:bg-gray-100');
   });
 
-    test('renders password type input', () => {
-        render(<Input type="password" name="password" label="Password" />);
-        const input = screen.getByLabelText(/password/i);
-        expect(input).toHaveAttribute('type', 'password');
-    });  test('renders email type input', () => {
+  test('renders password type input', () => {
+    render(<Input type="password" name="password" label="Password" />);
+    const input = screen.getByLabelText(/password/i);
+    expect(input).toHaveAttribute('type', 'password');
+  });
+  test('renders email type input', () => {
     render(<Input type="email" name="email" />);
     const input = screen.getByRole('textbox');
     expect(input).toHaveAttribute('type', 'email');
