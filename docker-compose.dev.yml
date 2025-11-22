@@ -30,6 +30,7 @@ services:
     command: sh -c "npm install && npx prisma generate && npm run dev"
     ports:
       - "5001:5001"
+      - "5555:5555"
     env_file:
       - ./backend/.env
     depends_on:
