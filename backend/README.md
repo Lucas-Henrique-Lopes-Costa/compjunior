@@ -297,6 +297,31 @@ http://localhost:5001/api-docs
 - Em caso de empate, considera `checkInsCount`
 - Atualizado em tempo real ao aprovar check-ins
 
+## Documentação Postman
+
+### 1. Importar a Collection
+
+1. Abra o Postman
+2. Clique em **Import** no canto superior esquerdo
+3. Selecione o arquivo `postman_NaSalinha.json`
+4. A collection será importada com todas as requisições organizadas
+
+### 2. Configurar Variáveis de Ambiente
+
+A collection usa variáveis que são configuradas automaticamente:
+
+- `baseUrl`: URL base da API (padrão: `http://localhost:5001/api`)
+- `accessToken`: Token de acesso JWT (preenchido automaticamente após login)
+- `refreshToken`: Token de refresh (preenchido automaticamente após login)
+
+Você pode criar um Environment no Postman para diferentes ambientes (dev, staging, prod):
+
+```json
+{
+  "baseUrl": "http://localhost:5001/api"
+}
+```
+
 ## 📄 Licença
 
 Este projeto está sob a licença MIT.
