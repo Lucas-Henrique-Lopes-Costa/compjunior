@@ -85,6 +85,13 @@ npm install
 docker-compose up --build
 ```
 
+Rode o comando para executar as migrations e seeders do backend:
+
+```bash
+docker-compose exec backend npx prisma migrate dev --name init
+docker-compose exec backend npx prisma db seed
+```
+
 ### #Prisma Studio (Gerenciar Banco de Dados)
 
 Para abrir o Prisma Studio e gerenciar o banco de dados visualmente:

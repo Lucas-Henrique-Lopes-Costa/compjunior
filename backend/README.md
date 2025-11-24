@@ -237,6 +237,13 @@ Siga a documentação do frontend em [frontend/README.md](../frontend/README.md)
 docker-compose up -d
 ```
 
+Rode o comando para executar as migrations e seeders do backend:
+
+```bash
+docker-compose exec backend npx prisma migrate dev --name init
+docker-compose exec backend npx prisma db seed
+```
+
 Isso iniciará:
 
 - PostgreSQL (porta 5432)

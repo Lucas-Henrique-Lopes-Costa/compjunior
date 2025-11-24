@@ -89,24 +89,23 @@ REACT_APP_API_URL=http://localhost:5001/api
 
 ## Executando o Projeto
 
-### Modo Desenvolvimento
-
-```bash
-npm start
-```
-
-A aplicação será aberta automaticamente em `http://localhost:3000`
-
 ### Docker
 
 **Usando Docker Compose**:
 
 ```bash
 # Na raiz do projeto (onde está o docker-compose.yml)
-docker-compose up -d frontend
+docker-compose up -d
 ```
 
 É preciso configurar o backend para rodar junto (veja [backend/README.md](../backend/README.md)).
+
+Rode o comando para executar as migrations e seeders do backend:
+
+```bash
+docker-compose exec backend npx prisma migrate dev --name init
+docker-compose exec backend npx prisma db seed
+```
 
 Acesse em `http://localhost:3000`
 
