@@ -1,4 +1,3 @@
-// Mocks
 jest.mock('react-toastify');
 jest.mock('../services/authService');
 jest.mock('../services/api');

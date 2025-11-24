@@ -112,7 +112,6 @@ class SeasonController {
                 });
             }
 
-            // Se está ativando esta temporada, desativa todas as outras
             if (!season.isActive) {
                 await prisma.season.updateMany({
                     where: { isActive: true },

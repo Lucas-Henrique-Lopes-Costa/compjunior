@@ -1,6 +1,5 @@
 const nodemailer = require('nodemailer');
 
-// Configuração do transporter
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: parseInt(process.env.EMAIL_PORT, 10),
@@ -32,9 +31,7 @@ const sendEmail = async ({ to, subject, html }) => {
     };
 
     await transporter.sendMail(mailOptions);
-    console.log(`✅ E-mail enviado para ${to}`);
   } catch (error) {
-    console.error('Erro ao enviar e-mail:', error);
     throw new Error('Falha no envio do e-mail');
   }
 };

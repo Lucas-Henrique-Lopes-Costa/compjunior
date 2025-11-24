@@ -26,7 +26,6 @@ class AuthController {
                 },
             });
 
-            // Enviar e-mail de boas-vindas (assíncrono, não bloqueia)
             sendWelcomeEmail(user).catch(console.error);
 
             const accessToken = generateAccessToken({ userId: user.id });
@@ -130,7 +129,6 @@ class AuthController {
         try {
             const { token, newPassword } = req.body;
 
-            // Verificar token
             const jwt = require('jsonwebtoken');
             let decoded;
 
@@ -143,7 +141,6 @@ class AuthController {
                 });
             }
 
-            // Verificar se é um token de reset
             if (decoded.purpose !== 'reset') {
                 return res.status(400).json({
                     success: false,
@@ -151,7 +148,6 @@ class AuthController {
                 });
             }
 
-            // Atualizar senha
             const hashedPassword = await bcrypt.hash(newPassword, 10);
 
             await prisma.user.update({

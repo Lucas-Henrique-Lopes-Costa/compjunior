@@ -9,7 +9,6 @@ const {
 
 const router = express.Router();
 
-// Todas as rotas requerem autenticação
 router.use(authenticate);
 
 /**

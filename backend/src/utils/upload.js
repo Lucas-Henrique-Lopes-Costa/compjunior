@@ -1,7 +1,6 @@
 const multer = require('multer');
 const path = require('path');
 
-// Configuração de armazenamento
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/');
@@ -12,7 +11,6 @@ const storage = multer.diskStorage({
     },
 });
 
-// Filtro de arquivos - aceita apenas imagens
 const fileFilter = (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|gif|webp/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
@@ -25,7 +23,6 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
-// Configuração do multer
 const upload = multer({
     storage,
     fileFilter,

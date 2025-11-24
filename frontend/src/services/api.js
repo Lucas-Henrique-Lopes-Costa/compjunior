@@ -7,7 +7,6 @@ const api = axios.create({
     },
 });
 
-// Interceptor para adicionar token em todas as requisições
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('accessToken');
@@ -19,13 +18,11 @@ api.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// Interceptor para tratar erros de resposta
 api.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
 
-        // Se erro 401 e não é rota de refresh, tenta renovar token
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
 
@@ -44,7 +41,6 @@ api.interceptors.response.use(
                     return api(originalRequest);
                 }
             } catch (refreshError) {
-                // Se falhar ao renovar, faz logout
                 localStorage.removeItem('accessToken');
                 localStorage.removeItem('refreshToken');
                 window.location.href = '/login';

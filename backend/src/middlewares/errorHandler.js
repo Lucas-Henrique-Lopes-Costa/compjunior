@@ -5,7 +5,6 @@
 const errorHandler = (err, req, res, next) => {
     console.error('Erro:', err);
 
-    // Erro de validação do Joi
     if (err.isJoi) {
         return res.status(400).json({
             success: false,
@@ -17,7 +16,6 @@ const errorHandler = (err, req, res, next) => {
         });
     }
 
-    // Erro do Prisma - registro não encontrado
     if (err.code === 'P2025') {
         return res.status(404).json({
             success: false,
@@ -25,7 +23,6 @@ const errorHandler = (err, req, res, next) => {
         });
     }
 
-    // Erro do Prisma - violação de constraint única
     if (err.code === 'P2002') {
         return res.status(409).json({
             success: false,
@@ -34,7 +31,6 @@ const errorHandler = (err, req, res, next) => {
         });
     }
 
-    // Erro do Multer - arquivo muito grande
     if (err.code === 'LIMIT_FILE_SIZE') {
         return res.status(413).json({
             success: false,
@@ -42,7 +38,6 @@ const errorHandler = (err, req, res, next) => {
         });
     }
 
-    // Erro personalizado
     if (err.statusCode) {
         return res.status(err.statusCode).json({
             success: false,
@@ -50,7 +45,6 @@ const errorHandler = (err, req, res, next) => {
         });
     }
 
-    // Erro genérico
     return res.status(500).json({
         success: false,
         message: process.env.NODE_ENV === 'development'

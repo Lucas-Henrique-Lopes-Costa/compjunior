@@ -5,7 +5,6 @@ const bcrypt = require('bcrypt');
 
 describe('Auth API', () => {
     beforeAll(async () => {
-        // Limpar banco de testes
         await prisma.user.deleteMany();
     });
 

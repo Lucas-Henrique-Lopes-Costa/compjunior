@@ -4,15 +4,11 @@ const bcrypt = require('bcrypt');
 const prisma = new PrismaClient();
 
 async function main() {
-    console.log('🌱 Iniciando seed do banco de dados...');
-
-    // Limpar dados existentes
     await prisma.point.deleteMany();
     await prisma.checkIn.deleteMany();
     await prisma.season.deleteMany();
     await prisma.user.deleteMany();
 
-    // Criar usuários
     const hashedPassword = await bcrypt.hash('senha123', 10);
 
     const admin = await prisma.user.create({
@@ -26,8 +22,8 @@ async function main() {
 
     const member1 = await prisma.user.create({
         data: {
-            name: 'João Silva',
-            email: 'joao@example.com',
+            name: 'Lucas Silva',
+            email: 'lucas@example.com',
             password: hashedPassword,
             role: 'MEMBER',
         },
@@ -51,9 +47,6 @@ async function main() {
         },
     });
 
-    console.log('✅ Usuários criados');
-
-    // Criar temporada ativa
     const season = await prisma.season.create({
         data: {
             name: 'Temporada 2025.1',
@@ -65,14 +58,11 @@ async function main() {
         },
     });
 
-    console.log('✅ Temporada criada');
-
-    // Criar check-ins de exemplo
     const checkIn1 = await prisma.checkIn.create({
         data: {
             userId: member1.id,
             seasonId: season.id,
-            photoUrl: 'https://via.placeholder.com/400x300?text=Check-in+1',
+            photoUrl: 'https://lh3.googleusercontent.com/p/AF1QipOx2WzCi8PRjXdKSP2bbPlFn-f5G0fjJAQa_Z63=s680-w680-h510-rw',
             status: 'APPROVED',
             points: 10,
         },
@@ -82,7 +72,7 @@ async function main() {
         data: {
             userId: member1.id,
             seasonId: season.id,
-            photoUrl: 'https://via.placeholder.com/400x300?text=Check-in+2',
+            photoUrl: 'https://lh3.googleusercontent.com/p/AF1QipOx2WzCi8PRjXdKSP2bbPlFn-f5G0fjJAQa_Z63=s680-w680-h510-rw',
             status: 'APPROVED',
             points: 10,
         },
@@ -92,15 +82,12 @@ async function main() {
         data: {
             userId: member2.id,
             seasonId: season.id,
-            photoUrl: 'https://via.placeholder.com/400x300?text=Check-in+3',
+            photoUrl: 'https://lh3.googleusercontent.com/p/AF1QipOx2WzCi8PRjXdKSP2bbPlFn-f5G0fjJAQa_Z63=s680-w680-h510-rw',
             status: 'APPROVED',
             points: 10,
         },
     });
 
-    console.log('✅ Check-ins criados');
-
-    // Criar pontuações
     await prisma.point.create({
         data: {
             userId: member1.id,
@@ -128,12 +115,9 @@ async function main() {
         },
     });
 
-    console.log('✅ Pontuações criadas');
-
-    console.log('🎉 Seed concluído com sucesso!');
-    console.log('\n📊 Dados criados:');
+    console.log('\nDados criados:');
     console.log(`- Admin: admin@nasalinha.com / senha123`);
-    console.log(`- Membros: joao@example.com, maria@example.com / senha123`);
+    console.log(`- Membros: lucas@example.com, maria@example.com / senha123`);
     console.log(`- Trainee: pedro@example.com / senha123`);
 }
 

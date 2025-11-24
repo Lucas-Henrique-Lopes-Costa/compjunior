@@ -35,9 +35,7 @@ class EmailService {
                     </div>
                 `,
             });
-            console.log(`✅ E-mail de boas-vindas enviado para ${user.email}`);
         } catch (error) {
-            console.error('❌ Erro ao enviar e-mail de boas-vindas:', error);
             throw error;
         }
     }
@@ -75,7 +73,6 @@ class EmailService {
                     </div>
                 `,
             });
-            console.log(`✅ E-mail de redefinição de senha enviado para ${user.email}`);
         } catch (error) {
             console.error('❌ Erro ao enviar e-mail de redefinição:', error);
             throw error;

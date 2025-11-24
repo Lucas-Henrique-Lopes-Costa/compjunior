@@ -131,7 +131,6 @@ class UserController {
         try {
             const { id } = req.params;
 
-            // Verifica se o usuário existe
             const user = await prisma.user.findUnique({
                 where: { id },
             });
@@ -143,7 +142,6 @@ class UserController {
                 });
             }
 
-            // Não permite deletar o próprio usuário
             if (id === req.user.id) {
                 return res.status(400).json({
                     success: false,

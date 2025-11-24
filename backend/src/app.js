@@ -17,7 +17,6 @@ const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 
-// Swagger configuration
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
@@ -258,7 +257,6 @@ const swaggerOptions = {
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
-// Middlewares de segurança
 app.use(helmet());
 app.use(
   cors({
@@ -275,21 +273,17 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// Logging
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 } else {
   app.use(morgan('combined'));
 }
 
-// Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// API Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Health check
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'ok',
@@ -298,7 +292,6 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/checkins', checkinRoutes);
@@ -306,7 +299,6 @@ app.use('/api/seasons', seasonRoutes);
 app.use('/api/rankings', rankingRoutes);
 app.use('/api/points', pointRoutes);
 
-// 404 handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -314,7 +306,6 @@ app.use((req, res) => {
   });
 });
 
-// Error handler
 app.use(errorHandler);
 
 module.exports = app;

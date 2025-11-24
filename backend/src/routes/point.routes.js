@@ -4,7 +4,6 @@ const { authenticate, authorize } = require('../middlewares/auth');
 
 const router = express.Router();
 
-// Todas as rotas requerem autenticação
 router.use(authenticate);
 
 /**

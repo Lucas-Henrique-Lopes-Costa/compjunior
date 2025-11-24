@@ -6,7 +6,6 @@ const { updateUserSchema } = require('../validators/user.validator');
 
 const router = express.Router();
 
-// Todas as rotas requerem autenticação
 router.use(authenticate);
 
 /**

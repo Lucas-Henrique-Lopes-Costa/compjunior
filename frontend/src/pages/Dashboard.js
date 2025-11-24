@@ -43,7 +43,6 @@ const Dashboard = () => {
                 ranking: myRanking || rankings.length + 1,
             });
 
-            // Pega os 10 check-ins mais recentes de TODOS os usuários
             setRecentCheckIns(allCheckIns.slice(0, 10));
         } catch (error) {
             console.error('Erro ao carregar estatísticas:', error);
@@ -54,7 +53,6 @@ const Dashboard = () => {
 
     useEffect(() => {
         loadStats();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleLogout = () => {
@@ -160,7 +158,6 @@ const Dashboard = () => {
 
                 {/* Stats Grid */}
                 {user.role === 'ADMIN' ? (
-                    // Admin Dashboard
                     <div className="grid md:grid-cols-3 gap-6 mb-8">
                         <StatCard
                             icon={<FaUsers className="text-3xl" />}
@@ -188,7 +185,6 @@ const Dashboard = () => {
                         />
                     </div>
                 ) : (
-                    // Member/Trainee Dashboard
                     <div className={`grid ${user.role === 'TRAINEE' ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6 mb-8`}>
                         <StatCard
                             icon={<FaCamera className="text-3xl" />}

@@ -5,7 +5,6 @@ class PointController {
     try {
       const { userId, seasonId, totalPoints, checkInsCount } = req.body;
 
-      // Verifica se já existe um registro de pontos para esse usuário/temporada
       const existingPoint = await prisma.point.findUnique({
         where: {
           userId_seasonId: { userId, seasonId },

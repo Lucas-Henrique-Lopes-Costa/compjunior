@@ -3,7 +3,6 @@ const prisma = require('../config/database');
 class RankingController {
     async getGeneral(req, res, next) {
         try {
-            // Busca a temporada ativa
             const activeSeason = await prisma.season.findFirst({
                 where: { isActive: true },
             });
@@ -16,7 +15,6 @@ class RankingController {
                 });
             }
 
-            // Retorna apenas os pontos da temporada ativa
             const rankings = await prisma.point.findMany({
                 where: { seasonId: activeSeason.id },
                 include: {

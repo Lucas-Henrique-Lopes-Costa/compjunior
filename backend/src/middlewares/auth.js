@@ -7,7 +7,6 @@ const prisma = require('../config/database');
  */
 const authenticate = async (req, res, next) => {
   try {
-    // Extrai o token do header Authorization
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -19,10 +18,8 @@ const authenticate = async (req, res, next) => {
 
     const token = authHeader.substring(7); // Remove "Bearer "
 
-    // Verifica e decodifica o token
     const decoded = verifyAccessToken(token);
 
-    // Busca o usuário no banco de dados
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
       select: {
@@ -48,7 +45,6 @@ const authenticate = async (req, res, next) => {
       });
     }
 
-    // Adiciona o usuário ao request
     req.user = user;
     next();
   } catch (error) {

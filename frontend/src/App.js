@@ -8,7 +8,6 @@ import PrivateRoute from './components/common/PrivateRoute';
 import RankingRoute from './components/common/RankingRoute';
 import AdminRoute from './components/common/AdminRoute';
 
-// Pages
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';

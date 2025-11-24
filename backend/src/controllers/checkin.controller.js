@@ -14,13 +14,10 @@ class CheckInController {
         });
       }
 
-      // Upload para Cloudinary
       const { url } = await uploadImage(req.file.path, 'checkins');
 
-      // Deleta arquivo temporário
       await fs.unlink(req.file.path).catch(console.error);
 
-      // Busca temporada ativa
       const season = await prisma.season.findFirst({
         where: { isActive: true },
         orderBy: { createdAt: 'desc' },
@@ -33,7 +30,6 @@ class CheckInController {
         });
       }
 
-      // Cria check-in
       const checkIn = await prisma.checkIn.create({
         data: {
           userId,
@@ -52,7 +48,6 @@ class CheckInController {
         },
       });
 
-      // Atualiza pontuação
       await prisma.point.upsert({
         where: {
           userId_seasonId: { userId, seasonId: season.id },

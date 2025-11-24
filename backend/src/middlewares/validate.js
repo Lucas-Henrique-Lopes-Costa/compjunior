@@ -20,7 +20,6 @@ const validate = (schema) => {
             });
         }
 
-        // Substitui req.body pelos valores validados
         req.body = value;
         next();
     };

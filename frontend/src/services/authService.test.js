@@ -1,4 +1,3 @@
-// Mock do módulo api e axios
 jest.mock('axios');
 jest.mock('./api');
 
@@ -7,9 +6,7 @@ import api from './api';
 
 describe('AuthService', () => {
   beforeEach(() => {
-    // Limpa todos os mocks antes de cada teste
     jest.clearAllMocks();
-    // Limpa o localStorage
     localStorage.clear();
   });
 
